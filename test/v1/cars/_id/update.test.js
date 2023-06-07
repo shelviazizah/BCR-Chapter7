@@ -4,12 +4,11 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dayjs = require("dayjs");
 const { AuthenticationController } = require("../../../../app/controllers");
-const { User, Role, Car, UserCar } = require("../../../../app/models");
+const { User, Role, Car, } = require("../../../../app/models");
 
 const userModel = User;
 const roleModel = Role;
 const carModel = Car;
-const userCarModel = UserCar;
 
 const authController = new AuthenticationController({
   bcrypt,

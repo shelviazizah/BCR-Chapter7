@@ -1,11 +1,38 @@
 const { NotFoundError } = require("../errors");
 const ApplicationController = require("./ApplicationController");
+const ApplicationError = require('../errors/ApplicationError')
+
+describe('ApplicationError', () => {
+  it('This Application Error', () => {
+    const error = new ApplicationError('Error', 'Error', { });
+
+    expect(error.name).toBe('Error');
+    expect(error.message).toBe('Error');
+    expect(error.details).toEqual({});
+  });
+
+  it('should return the correct JSON representation', () => {
+    const error = new ApplicationError('Error', 'Error', { });
+    const expectedJSON = {
+      error: {
+        name: 'Error',
+        message: 'Error',
+        details: { },
+      },
+    };
+
+    const json = error.toJSON();
+    expect(json).toEqual(expectedJSON);
+  });
+});
+
 
 describe("ApplicationController", () => {
   let controller;
 
   beforeEach(() => {
     controller = new ApplicationController();
+    error = new ApplicationError();
   });
 
   describe("#handleGetRoot", () => {
@@ -54,7 +81,7 @@ describe("ApplicationController", () => {
 
   describe("#handleError", () => {
     it("should respond with status 500 and the expected error response body", () => {
-      const err = new Error("Something went wrong");
+      const err = new ApplicationError();
       const req = {};
       const res = {
         status: jest.fn().mockReturnThis(),
@@ -65,6 +92,7 @@ describe("ApplicationController", () => {
       controller.handleError(err, req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(500);
+      // expect(res.json).toHaveBeenCalledWith(new ApplicationError());
       expect(res.json).toHaveBeenCalledWith({
         error: {
           name: err.name,
@@ -137,3 +165,4 @@ describe("ApplicationController", () => {
     });
   });
 });
+

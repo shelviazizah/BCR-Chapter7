@@ -1,9 +1,8 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { EmailNotRegisteredError, NotFoundError, WrongPasswordError, RecordNotFoundError} = require("../errors");
+const { EmailNotRegisteredError, WrongPasswordError, EmailAlreadyTakenError} = require("../errors");
 const AuthenticationController = require("./AuthenticationController");
 const { User, Role} = require('../models')
-
 
 
 describe("AuthenticationController", () => {
@@ -42,6 +41,7 @@ describe("AuthenticationController", () => {
       jwt: jwtMock,
     });
   });
+
 
   describe("#handleLogin", () => {
     it("should respond with status 201 and the access token if the login is successful", async () => {
@@ -253,34 +253,38 @@ describe("AuthenticationController", () => {
     });
 
     it("should respond with status 422 if the email is already taken", async () => {
-      const name = "Fikri";
-      const email = "fikri@binar.co.id";
-      const password = "123456";
+      const email = "brian@binar.co.id";
+      const err = new EmailAlreadyTakenError(email)
       const req = {
         body: {
-          name,
-          email,
-          password,
+          name: "Brian",
+          email: "brian@binar.co.id",
+          password: "123456",
         },
       };
       const res = {
-        status: jest.fn().mockReturnThis(),
+        status: jest.fn().mockReturnValue(),
         json: jest.fn(),
       };      
       const next = jest.fn();
       const existingUser = {
-        id: 1,
-        name: "Fikri",
-        email: "fikri@binar.co.id",
+        name: "Brian",
+        email: "brian@binar.co.id",
+        encryptedPassword: "encrypted",
+        roleId: 1,
       };
 
-      userModel.findOne.mockResolvedValueOnce(existingUser);
+      controller.userModel.findOne.mockResolvedValueOnce(existingUser);
 
       await controller.handleRegister(req, res, next);
 
-      expect(userModel.findOne).toHaveBeenCalledWith({ where: { email } });
-    //   expect(res.status).toHaveBeenCalledWith(422);
-    //   expect(res.json).toHaveBeenCalledWith(expect.any(EmailAlreadyTakenError));
+      expect(controller.userModel.findOne).toHaveBeenCalledWith({
+        where: { email: email},
+      });
+      // expect(res.status).toHaveBeenCalledWith(422);
+      // expect(res.json).toHaveBeenCalledWith(err);
+      // expect(res.status).toHaveBeenCalledWith(422);
+      // expect(res.json).toHaveBeenCalledWith(expect.any(EmailAlreadyTakenError));
     });
 
     it("should call the next middleware with the error if an error occurs", async () => {

@@ -16,19 +16,19 @@ module.exports = (sequelize, DataTypes) => {
       })
     }
 
-    // toJSON() {
-    //   return {
-    //     id: this.id,
-    //     name: this.name,
-    //     price: this.price,
-    //     size: this.size,
-    //     image: this.image,
-    //     createdAt: this.createdAt,
-    //     updatedAt: this.updatedAt,
-    //     rentStartedAt: this.UserCar?.rentStartedAt,
-    //     rentEndedAt: this.UserCar?.rentEndedAt,
-    //   }
-    // }
+    toJSON() {
+      return {
+        id: this.id,
+        name: this.name,
+        price: this.price,
+        size: this.size,
+        image: this.image,
+        createdAt: this.createdAt,
+        updatedAt: this.updatedAt,
+        rentStartedAt: this.UserCar?.rentStartedAt,
+        rentEndedAt: this.UserCar?.rentEndedAt,
+      }
+    }
   }
   Car.init({
     name: DataTypes.STRING,
