@@ -6,4 +6,7 @@ Tugas kalian disini adalah:
 2. Tulis unit test di dalam repository ini menggunakan `jest`.
 3. Coverage minimal 70%
 
+# IMG 
+![ERD Image](./ss.png)
+
 Good luck!
