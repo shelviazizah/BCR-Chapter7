@@ -9,4 +9,7 @@ Tugas kalian disini adalah:
 # IMG 
 ![ERD Image](./ss.png)
 
+# Railway
+![ERD Image](./railway.png)
+
 Good luck!
